@@ -40,8 +40,8 @@
   --border-radius-box: 1.5rem;
 
   /* Font */
-  --font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', sans-serif;
-  --font-family-heading: Outfit, system-ui, -apple-system, Georgia, serif;
+  --font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-family-heading: 'Karla', system-ui, -apple-system, Georgia, serif;
 
   --font-size-s: 0.75rem;
   --font-size-m: 1rem;
@@ -53,8 +53,7 @@
   --font-weight-light: 300;
   --font-weight-normal: 400;
   --font-weight-medium: 500;
-  --font-weight-bold: 700;
-  --font-weight-black: 800;
+  --font-weight-bold: 800;
 
   /* Transition */
   --transition-duration-fast: 150ms;

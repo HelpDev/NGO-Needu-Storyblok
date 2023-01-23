@@ -35,10 +35,10 @@ export default defineNuxtConfig({
   },
   googleFonts: {
     families: {
-      Outfit: {
+      Karla: {
         wght: [300, 400, 500, 700, 800]
       },
-      Montserrat: {
+      Poppins: {
         wght: [300, 400, 500, 700, 800]
       }
     }
