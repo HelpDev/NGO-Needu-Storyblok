@@ -47,7 +47,7 @@ export default defineNuxtConfig({
     routes: otherLocalesRoutes
   },
   sitemap: {
-    hostname: 'https://helpdev.org',
+    hostname: 'https://need-u.org',
     routes: getRoutes(accessToken)
   }
 });
