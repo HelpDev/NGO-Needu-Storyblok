@@ -26,5 +26,5 @@ const TEMPLATE_REPO = 'https://github.com/HelpDev/NGO-HelpDev-Storyblok.git';
   await git.raw('switch', 'main');
 
   // Merge to main
-  await git.raw('merge', 'main');
+  await git.raw('merge', 'template', '--allow-unrelated-histories');
 })();
