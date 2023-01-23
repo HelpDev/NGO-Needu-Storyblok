@@ -15,7 +15,8 @@
     "postinstall": "nuxt prepare",
     "lint": "yarn lint:scripts && yarn lint:styles",
     "lint:scripts": "eslint --fix \"./{plugins,pages,components,composables,layouts,modules}/**/*.{ts,js,vue}\"",
-    "lint:styles": "stylelint \"./**/*.{css,vue}\" --fix"
+    "lint:styles": "stylelint \"./**/*.{css,vue}\" --fix",
+    "update": "node ./update.js"
   },
   "husky": {
     "hooks": {
@@ -58,6 +59,7 @@
     "@nuxtjs/i18n": "^8.0.0-beta.4",
     "@papanasi/vue": "^1.0.0",
     "axios": "0.27.2",
-    "normalize.css": "^8.0.1"
+    "normalize.css": "^8.0.1",
+    "simple-git": "^3.16.0"
   }
 }
