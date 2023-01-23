@@ -19,7 +19,13 @@ const TEMPLATE_REPO = 'https://github.com/HelpDev/NGO-HelpDev-Storyblok.git';
   await git.raw('fetch', 'template');
 
   // Move to template and update again
-  await git.raw('switch', '-c', 'template', 'template/main');
+  try {
+    await git.raw('switch', '-c', 'template', 'template/main');
+  } catch (error) {
+    if (!error.message.includes('already exists')) {
+      throw error;
+    }
+  }
   await git.raw('fetch', 'template');
 
   // Move to origin main
