@@ -24,3 +24,20 @@ body {
   color: var(--color-primary-darkest);
   background: var(--color-primary-brightest);
 }
+
+hr {
+  display: none;
+}
+
+a,
+a:active,
+a:visited,
+a:hover {
+  color: var(--color-primary-normal);
+  text-decoration: none;
+}
+
+a:active,
+a:hover {
+  text-decoration: underline;
+}

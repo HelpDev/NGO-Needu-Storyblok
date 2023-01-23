@@ -1,19 +1,29 @@
 <script setup>
 import { Column, Container, Row } from '@papanasi/vue';
-const storyblokApi = useStoryblokApi();
-const { locale, locales } = useI18n();
-const switchLocalePath = useSwitchLocalePath();
+import { useSettingsStore } from '~/stores';
 
-const { data } = await storyblokApi.get('cdn/stories/config', {
-  version: 'draft',
-  resolve_links: 'url',
-  language: locale.value
+const { locale, locales, setLocale } = useI18n();
+const switchLocalePath = useSwitchLocalePath();
+const store = useSettingsStore();
+
+const title = ref(store.footer_title);
+const subtitle = ref(store.footer_subtitle);
+const thanks = ref(store.footer_thanks);
+const social = ref(store.social);
+
+watchEffect(() => {
+  title.value = store.footer_title;
+  subtitle.value = store.footer_subtitle;
+  thanks.value = store.footer_thanks;
+  social.value = store.social;
 });
 
-const title = ref(data.story.content.footer_title);
-const subtitle = ref(data.story.content.footer_subtitle);
-const thanks = ref(data.story.content.footer_thanks);
-const social = ref(data.story.content.social);
+function updateLocale(locale) {
+  setLocale(locale);
+
+  // SetLocale not working well in static apps
+  setTimeout(() => location.reload(), 10);
+}
 
 const iconTemplate = (icon) => {
   return `https://raw.githubusercontent.com/gilbarbara/logos/master/logos/${icon}.svg`;
@@ -30,7 +40,7 @@ const otherLocales = computed(() => locales.value.filter((x) => x.code !== local
           <h4 class="footer__title">{{ title }}</h4>
           <h5 class="footer__subtitle">{{ subtitle }}</h5>
 
-          <ul class="footer__actions">
+          <ul v-if="social" class="footer__actions">
             <li v-for="element in social" :key="element._uid">
               <NuxtLink
                 class="footer__link"
@@ -44,20 +54,22 @@ const otherLocales = computed(() => locales.value.filter((x) => x.code !== local
                 <img
                   class="footer__social"
                   :src="iconTemplate(element.icon)"
-                  :alt="data.story.content.title"
+                  :alt="store.title"
                   width="50"
+                  height="26"
                 />
               </NuxtLink>
             </li>
           </ul>
 
           <div class="footer__languages">
-            <nuxt-link
+            <NuxtLink
               v-for="language in otherLocales"
               :key="language.code"
               class="footer__language"
               :to="switchLocalePath(language.code)"
-              >{{ language.name }}</nuxt-link
+              @click="updateLocale(language.code)"
+              >{{ language.name }}</NuxtLink
             >
           </div>
         </Column>
@@ -65,10 +77,22 @@ const otherLocales = computed(() => locales.value.filter((x) => x.code !== local
         <Column class="footer__column" :basic="full" :s="4">
           <h4 class="footer__title footer__title--thanks">{{ thanks }}</h4>
           <NuxtLink to="https://helpdev.org" target="_blank">
-            <img class="footer__logo" src="~/assets/images/helpdev.png" :alt="data.story.content.title" width="150" />
+            <img
+              class="footer__logo"
+              src="~/assets/images/helpdev.png"
+              :alt="store.title"
+              width="150"
+              height="25.315"
+            />
           </NuxtLink>
           <NuxtLink to="https://www.storyblok.com/" target="_blank">
-            <img class="footer__logo" src="~/assets/images/storyblok.png" :alt="data.story.content.title" width="150" />
+            <img
+              class="footer__logo"
+              src="~/assets/images/storyblok.png"
+              :alt="store.title"
+              width="150"
+              height="25.315"
+            />
           </NuxtLink>
         </Column>
       </Row>
@@ -80,6 +104,7 @@ const otherLocales = computed(() => locales.value.filter((x) => x.code !== local
 .footer {
   background-color: var(--color-primary-normal);
   padding: 0 1rem 1.25rem 1rem;
+  margin-top: 3vw;
 
   &__container {
     color: var(--color-basic-brightest);
@@ -135,6 +160,7 @@ const otherLocales = computed(() => locales.value.filter((x) => x.code !== local
 
   &__logo {
     max-width: 6rem;
+    height: auto;
 
     @media (--breakpoint-s) {
       max-width: 9rem;
@@ -168,13 +194,16 @@ const otherLocales = computed(() => locales.value.filter((x) => x.code !== local
       margin-right: 0.25rem;
     }
 
-    &:hover {
+    &:hover,
+    &:active {
+      text-decoration: none;
       border-color: var(--color-basic-brightest);
     }
   }
 
   &__social {
     max-width: 1rem;
+    height: auto;
 
     @media (--breakpoint-s) {
       max-width: 1.25rem;
@@ -193,7 +222,9 @@ const otherLocales = computed(() => locales.value.filter((x) => x.code !== local
     transition: border-color var(--transition-duration-normal);
     margin-right: 0.25rem;
 
-    &:hover {
+    &:hover,
+    &:active {
+      text-decoration: none;
       border-bottom-color: var(--color-basic-brightest);
     }
   }

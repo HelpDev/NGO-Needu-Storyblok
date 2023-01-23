@@ -1,7 +1,10 @@
 <script setup>
 import { Button, Column, Container, Row } from '@papanasi/vue';
+import { useSettingsStore } from '~/stores';
+
 const storyblokApi = useStoryblokApi();
 const { locale } = useI18n();
+const store = useSettingsStore();
 
 const { data } = await storyblokApi.get('cdn/stories/config', {
   version: 'draft',
@@ -9,8 +12,31 @@ const { data } = await storyblokApi.get('cdn/stories/config', {
   language: locale.value
 });
 
-const menu = ref(data.story.content.menu);
-const actions = ref(data.story.content.actions);
+store.update(data.story.content);
+
+useHead({
+  htmlAttrs: {
+    lang: locale.value
+  },
+  title: store.title,
+  meta: [{ name: 'description', content: store.description }],
+  script: [
+    {
+      hid: 'gtm',
+      children: data.story.content.gtag
+        ? `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','${data.story.content.gtag}');`
+        : '',
+      type: 'text/javascript'
+    }
+  ]
+});
+
+const menu = ref(store.menu);
+const actions = ref(store.actions);
 </script>
 
 <template>
@@ -23,6 +49,7 @@ const actions = ref(data.story.content.actions);
             src="~/assets/images/logo_landscape_white.png"
             :alt="data.story.content.title"
             width="200"
+            height="30"
           />
         </NuxtLink>
       </Column>
@@ -32,6 +59,7 @@ const actions = ref(data.story.content.actions);
             <li v-for="blok in menu" :key="blok._uid">
               <NuxtLink
                 class="header__link"
+                :target="blok.link.target"
                 :to="
                   blok.link.cached_url.includes('index')
                     ? blok.link.cached_url.replace('index', locale === 'en' ? '/' : '')
@@ -91,6 +119,7 @@ const actions = ref(data.story.content.actions);
 
   &__logo {
     max-width: 8rem;
+    height: auto;
 
     @media (--breakpoint-s) {
       max-width: 13rem;
@@ -126,6 +155,10 @@ const actions = ref(data.story.content.actions);
 
     &:hover {
       color: var(--color-primary-brightest);
+    }
+
+    &.router-link-active {
+      text-decoration: underline;
     }
 
     @media (--breakpoint-s) {

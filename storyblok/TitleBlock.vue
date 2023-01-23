@@ -5,6 +5,9 @@ const storyblokApi = useStoryblokApi();
 const props = defineProps({ blok: Object });
 
 const variantColors = {
+  transparent: {
+    foreground: 'transparent'
+  },
   basic: {
     foreground: 'var(--color-basic-darkest)'
   },
@@ -26,8 +29,8 @@ const foreground = ref(variantColors[props.blok.variant].foreground);
 
 <template>
   <Container class="title">
-    <h2 class="title__main">{{ blok.title }}</h2>
-    <p class="title__subtitle" v-html="richtext"></p>
+    <h2 v-if="blok.title" class="title__main">{{ blok.title }}</h2>
+    <p v-if="richtext.length > '<p></p>'.length" class="title__subtitle" v-html="richtext"></p>
   </Container>
 </template>
 
@@ -38,11 +41,12 @@ const foreground = ref(variantColors[props.blok.variant].foreground);
 
   color: var(--foreground);
   width: 100%;
-  margin: 0.5rem auto;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 0;
 
   @media (--breakpoint-m) {
     flex-direction: var(--direction);
@@ -50,7 +54,8 @@ const foreground = ref(variantColors[props.blok.variant].foreground);
 
   &__main,
   &__subtitle {
-    padding: 1vw;
+    margin: 0;
+    padding: 3vw;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -63,8 +68,23 @@ const foreground = ref(variantColors[props.blok.variant].foreground);
     }
   }
 
+  &__main {
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+
+    @media (--breakpoint-m) {
+      font-size: var(--font-size-xxl);
+    }
+  }
+
   &__subtitle {
     opacity: 0.8;
+    font-size: var(--font-size-m);
+
+    @media (--breakpoint-m) {
+      font-size: var(--font-size-l);
+    }
   }
 }
 </style>

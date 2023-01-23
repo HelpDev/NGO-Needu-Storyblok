@@ -3,7 +3,7 @@ const accessToken = process.env.STORYBLOK_TOKEN;
 
 export default defineNuxtConfig({
   css: ['@papanasi/vue/papanasi.css', '~/assets/styles/app.css'],
-  modules: ['@storyblok/nuxt', '@nuxtjs/google-fonts', '@nuxtjs/i18n'],
+  modules: ['@storyblok/nuxt', '@nuxtjs/google-fonts', '@nuxtjs/i18n', '@pinia/nuxt', '@funken-studio/sitemap-nuxt-3'],
   storyblok: {
     accessToken
   },
@@ -24,17 +24,8 @@ export default defineNuxtConfig({
   },
   i18n: {
     strategy: 'prefix_except_default',
-    locales: [
-      {
-        code: 'en',
-        name: 'English'
-      },
-      {
-        code: 'es',
-        name: 'Español'
-      }
-    ],
-    defaultLocale: 'en',
+    locales,
+    defaultLocale,
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'i18n_redirected',
@@ -52,6 +43,10 @@ export default defineNuxtConfig({
     }
   },
   generate: {
-    routes: ['/es']
+    routes: otherLocalesRoutes
+  },
+  sitemap: {
+    hostname: 'https://helpdev.org',
+    routes: getRoutes(accessToken)
   }
 });

@@ -14,12 +14,12 @@ defineProps({ blok: Object });
 
 <style scoped>
 .cards {
-  margin: 2rem auto;
+  margin: 0 auto;
 
   &__row {
     justify-content: center;
     flex-wrap: wrap;
-    padding: 2vw;
+    padding: 1vw;
   }
 
   @media (--breakpoint-m) {
@@ -27,10 +27,14 @@ defineProps({ blok: Object });
   }
 
   :deep(.card) {
-    --min-height: 35rem;
+    --min-height: 15rem;
     --max-height: 30vmax;
     --margin: 0.5rem;
     --full-width: calc(var(--width) - var(--margin) * 2);
+
+    @media (--breakpoint-s) {
+      --min-height: 35rem;
+    }
   }
 }
 </style>
