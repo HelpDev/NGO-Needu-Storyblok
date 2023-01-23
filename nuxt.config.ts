@@ -1,5 +1,6 @@
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 const accessToken = process.env.STORYBLOK_TOKEN;
+import { defaultLocale, getRoutes, locales, otherLocalesRoutes } from './helpers';
 
 export default defineNuxtConfig({
   css: ['@papanasi/vue/papanasi.css', '~/assets/styles/app.css'],
