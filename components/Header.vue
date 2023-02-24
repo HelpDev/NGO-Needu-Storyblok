@@ -6,48 +6,59 @@ const storyblokApi = useStoryblokApi();
 const { locale } = useI18n();
 const store = useSettingsStore();
 
-const { data } = await storyblokApi.get('cdn/stories/config', {
-  version: 'draft',
-  resolve_links: 'url',
-  language: locale.value
-});
+const menu = ref();
+const actions = ref();
 
-store.update(data.story.content);
+async function updateData() {
+  const { data } = await storyblokApi.get('cdn/stories/config', {
+    version: 'draft',
+    resolve_links: 'url',
+    language: locale.value
+  });
 
-useHead({
-  htmlAttrs: {
-    lang: locale.value
-  },
-  title: store.title,
-  meta: [{ name: 'description', content: store.description }],
-  script: [
-    {
-      hid: 'gtm',
-      children: data.story.content.gtag
-        ? `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  store.update(data.story.content);
+
+  useHead({
+    htmlAttrs: {
+      lang: locale.value
+    },
+    title: store.title,
+    meta: [{ name: 'description', content: store.description }],
+    script: [
+      {
+        hid: 'gtm',
+        children: data.story.content.gtag
+          ? `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
       new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
       j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
       })(window,document,'script','dataLayer','${data.story.content.gtag}');`
-        : '',
-      type: 'text/javascript'
-    }
-  ]
-});
+          : '',
+        type: 'text/javascript'
+      }
+    ]
+  });
 
-const menu = ref(store.menu);
-const actions = ref(store.actions);
+  menu.value = store.menu;
+  actions.value = store.actions;
+}
+
+updateData();
+
+watch([() => locale.value], () => {
+  updateData();
+});
 </script>
 
 <template>
   <Container :fluid="true" class="header">
-    <Row basic="column" s="row" class="header__container">
-      <Column :s="2" class="header__column">
+    <Row basic="column" m="row" class="header__container">
+      <Column :m="2" class="header__column">
         <NuxtLink to="/">
           <img
             class="header__logo"
             src="~/assets/images/logo_landscape_white.png"
-            :alt="data.story.content.title"
+            :alt="'Logo' || data.story.content.title"
             width="200"
             height="30"
           />
@@ -72,7 +83,7 @@ const actions = ref(store.actions);
           </ul>
         </nav>
       </Column>
-      <Column :s="2" class="header__column">
+      <Column :m="2" class="header__column">
         <ul class="header__menu">
           <li v-for="blok in actions" :key="blok._uid">
             <NuxtLink
@@ -84,7 +95,7 @@ const actions = ref(store.actions);
                   : blok.link.cached_url
               "
             >
-              <Button class="header__button" :outline="true" variant="basic">{{ blok.title }}</Button>
+              <Button class="header__button" variant="basic">{{ blok.title }}</Button>
             </NuxtLink>
           </li>
         </ul>
@@ -112,7 +123,7 @@ const actions = ref(store.actions);
     width: 90vw;
     height: var(--header-height-min);
 
-    @media (--breakpoint-s) {
+    @media (--breakpoint-m) {
       height: var(--header-height);
     }
   }
@@ -121,7 +132,7 @@ const actions = ref(store.actions);
     max-width: 8rem;
     height: auto;
 
-    @media (--breakpoint-s) {
+    @media (--breakpoint-m) {
       max-width: 13rem;
     }
   }
@@ -161,7 +172,7 @@ const actions = ref(store.actions);
       text-decoration: underline;
     }
 
-    @media (--breakpoint-s) {
+    @media (--breakpoint-m) {
       font-size: var(--font-size-l);
       margin: 0 2rem;
     }
@@ -171,19 +182,20 @@ const actions = ref(store.actions);
     --pa-border-width-small: 3px;
     --pa-button-radius: 100rem;
 
-    background-color: transparent;
+    background-color: var(--color-basic-brightest);
     font-size: var(--font-size-s);
-
-    color: var(--color-basic-brightest);
+    color: var(--color-primary-normal);
     border-color: var(--color-basic-brightest);
-    transition: opacity var(--transition-duration-normal);
+    transition-property: var(--transition-all);
+    transition-duration: var(--transition-duration-normal);
 
-    @media (--breakpoint-s) {
+    @media (--breakpoint-m) {
       font-size: var(--font-size-m);
     }
 
     &:hover {
-      opacity: 0.9;
+      transform: translateY(-0.1rem);
+      box-shadow: 0 0.35rem 0.25rem var(--color-primary-dark);
     }
   }
 }
