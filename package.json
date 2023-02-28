@@ -63,9 +63,11 @@
     "@papanasi/vue": "^1.0.2",
     "@pinia/nuxt": "^0.4.7",
     "@vue-stripe/vue-stripe": "^4.5.0",
+    "@vueuse/core": "^9.13.0",
     "normalize.css": "^8.0.1",
     "pinia": "^2.0.32",
     "vue-easy-lightbox": "^1.13.0",
+    "vue3-autocounter": "^1.0.6",
     "vue3-toggle-button": "^1.0.3"
   }
 }
